@@ -1,8 +1,10 @@
 {
-  "name": "sideslide",
+	"name": "sideslide",
 	"displayName": "SideSlide",
 	"description": "slide text up or down the side of your document!",
 	"version": "0.0.1",
+	"publisher": "smaxray",
+	"repository":"https://github.com/MaxraySavage/sideslide",
 	"engines": {
 		"vscode": "^1.61.0"
 	},
@@ -10,7 +12,7 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:sideslide.slideDown",
+		"onCommand:sideslide.slideDown",
 		"onCommand:sideslide.slideUp"
 	],
 	"main": "./out/extension.js",
