@@ -57,30 +57,30 @@ export function activate(context: vscode.ExtensionContext) {
 
 		editor.edit((editBuilder) => {
 			if(startingPosition.line === 0) {
-				editBuilder.insert(new vscode.Position(0, 0), EOL);
+				// Vscode's default behavior makes sliding up on the first time not work well
+				// Specifically it autocompletes an html tag automatically 
+				// once it hits the first line
+				return;
 			}
-		}).then( () => {
-			editor.edit((editBuilder) => {
-				startingPosition = editor.selection.start;
-				const startingLine = editor.document.lineAt(startingPosition.line);
-				const rangeToBump = new vscode.Range(startingPosition, startingLine.range.end);
-				const textToBump = editor.document.getText(rangeToBump);
-				const destinationLineNumber = Math.max(startingPosition.line - 1, 0);
-				const lineToBumpTo = editor.document.lineAt(destinationLineNumber);
-				vscode.commands.executeCommand('cursorMove', {
-					to: 'up',
-				});
-				editBuilder.insert(lineToBumpTo.range.end, textToBump);
-				vscode.commands.executeCommand('cursorMove', {
-					to: 'wrappedLineLastNonWhitespaceCharacter',
-				});
-				vscode.commands.executeCommand('cursorMove', {
-					to: 'left',
-					value: textToBump.length,
-				});
-				editBuilder.delete(rangeToBump);
+			startingPosition = editor.selection.start;
+			const startingLine = editor.document.lineAt(startingPosition.line);
+			const rangeToBump = new vscode.Range(startingPosition, startingLine.range.end);
+			const textToBump = editor.document.getText(rangeToBump);
+			const destinationLineNumber = Math.max(startingPosition.line - 1, 0);
+			const lineToBumpTo = editor.document.lineAt(destinationLineNumber);
+			vscode.commands.executeCommand('cursorMove', {
+				to: 'up',
 			});
-		});
+			editBuilder.insert(lineToBumpTo.range.end, textToBump);
+			vscode.commands.executeCommand('cursorMove', {
+				to: 'wrappedLineLastNonWhitespaceCharacter',
+			});
+			vscode.commands.executeCommand('cursorMove', {
+				to: 'left',
+				value: textToBump.length,
+			});
+			editBuilder.delete(rangeToBump);
+		})
 	});
 
 	context.subscriptions.push(slideDown);
