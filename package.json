@@ -24,6 +24,18 @@
 				"command": "sideslide.slideUp",
 				"title": "Sideslide Up"
 			}
+		],
+		"keybindings": [
+			{
+				"command": "sideslide.slideDown",
+				"mac": "ctrl+shift+down",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "sideslide.slideUp",
+				"mac": "ctrl+shift+up",
+				"when": "editorTextFocus"
+			}
 		]
 	},
 	"scripts": {
