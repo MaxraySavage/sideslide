@@ -25,15 +25,15 @@ export function activate(context: vscode.ExtensionContext) {
 		if(startingPosition.line + 1 === editor.document.lineCount) {
 			return;
 		}
-		
+
 		const startingLine = editor.document.lineAt(startingPosition.line);
 		const rangeToBump = new vscode.Range(startingPosition, startingLine.range.end);
 		const textToBump = editor.document.getText(rangeToBump);
 		const lineToBumpTo = editor.document.lineAt(startingPosition.line + 1);
 		
 		editor.edit((editBuilder) => {
-			editBuilder.insert(lineToBumpTo.range.end, textToBump);
 			editBuilder.delete(rangeToBump);
+			editBuilder.insert(lineToBumpTo.range.end, textToBump);
 		}).then(()=> {
 			vscode.commands.executeCommand('cursorMove', {
 				to: 'down',
@@ -60,16 +60,15 @@ export function activate(context: vscode.ExtensionContext) {
 			return;
 		}
 
+
 		const startingLine = editor.document.lineAt(startingPosition.line);
 		const rangeToBump = new vscode.Range(startingPosition, startingLine.range.end);
 		const textToBump = editor.document.getText(rangeToBump);
 		const lineToBumpTo = editor.document.lineAt(startingPosition.line - 1);
 
 		editor.edit((editBuilder) => {
-			editBuilder.insert(lineToBumpTo.range.end, textToBump);
 			editBuilder.delete(rangeToBump);
-			
-			
+			editBuilder.insert(lineToBumpTo.range.end, textToBump);
 		}).then(() => {
 			vscode.commands.executeCommand('cursorMove', {
 				to: 'up',
