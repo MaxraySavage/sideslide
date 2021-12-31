@@ -1,4 +1,4 @@
-# sideslide README
+# sideslide
 
 This extension allows you to move all text to the right of your cursor to the end of the next or preceding line. I find this useful for working with autoclosed html tags!
 
