@@ -17,7 +17,7 @@ This extension allows you to move all text to the right of your cursor to the en
 ## Design Changes
 Originally, I had implemented logic to add a new line if the user attempted to slide text from the last line down or from the first line up. I decided to remove that functionality to keep things as simple as possible however, it would be possible to re-implement if it seems useful.
 
-## The Tribulation of Text Teleportation
+## \[SOLVED\] The Tribulation of Text Teleportation
 This extension could be used anywhere. However, I originally thought of it when observing people copy and pasting inconvenent HTML closing tags during demos. 
 
 The extension works as intended for moving a closing tag. However there is a big issue. Moving an ***opening*** tag. 
@@ -27,3 +27,6 @@ This extension essentially deletes text and then inserts that same text somewher
 I have attempted deleting all text after the inserted text. Unfortunately it seems like there is a delay between when the text is inserted and when it is autocompleted. This makes it tricky to make sure I am deleting **after** the autocomplete happens while also ensuring I'm not deleting too late and possibly deleting user inputted text.
 
 I am now calling this the tribulation text teleportation . If only we could truly know that the text being inserted is the same as the text that was deleted, not some new entity...
+
+### Preventing Autocompletion
+I figured out that if the inserted text has a space at the end of it, VSCode won't autocomplete it. So currently, the extension adds a space at the end of the inserted text and then deletes the space after insertion. This only needs to happen when the text is moved upwards, though I don't understand why.
