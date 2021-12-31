@@ -20,22 +20,22 @@
 		"commands": [
 			{
 				"command": "sideslide.slideDown",
-				"title": "Sideslide Down"
+				"title": "Sideslide: Slide Text Down"
 			},
 			{
 				"command": "sideslide.slideUp",
-				"title": "Sideslide Up"
+				"title": "Sideslide: Slide Text Up"
 			}
 		],
 		"keybindings": [
 			{
 				"command": "sideslide.slideDown",
-				"mac": "ctrl+shift+down",
+				"key": "ctrl+shift+down",
 				"when": "editorTextFocus"
 			},
 			{
 				"command": "sideslide.slideUp",
-				"mac": "ctrl+shift+up",
+				"key": "ctrl+shift+up",
 				"when": "editorTextFocus"
 			}
 		]
