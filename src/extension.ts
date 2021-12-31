@@ -80,7 +80,7 @@ export function activate(context: vscode.ExtensionContext) {
 				value: textToBump.length,
 			});
 			editBuilder.delete(rangeToBump);
-		})
+		});
 	});
 
 	context.subscriptions.push(slideDown);
