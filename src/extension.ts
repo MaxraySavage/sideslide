@@ -27,13 +27,13 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		const startingLine = editor.document.lineAt(startingPosition.line);
-		const rangeToBump = new vscode.Range(startingPosition, startingLine.range.end);
-		const textToBump = editor.document.getText(rangeToBump);
-		const lineToBumpTo = editor.document.lineAt(startingPosition.line + 1);
+		const rangeToSlide = new vscode.Range(startingPosition, startingLine.range.end);
+		const textToSlide = editor.document.getText(rangeToSlide);
+		const lineToSlideTo = editor.document.lineAt(startingPosition.line + 1);
 		
 		editor.edit((editBuilder) => {
-			editBuilder.delete(rangeToBump);
-			editBuilder.insert(lineToBumpTo.range.end, textToBump);
+			editBuilder.delete(rangeToSlide);
+			editBuilder.insert(lineToSlideTo.range.end, textToSlide);
 		}).then(()=> {
 			vscode.commands.executeCommand('cursorMove', {
 				to: 'down',
@@ -43,7 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
 			});
 			vscode.commands.executeCommand('cursorMove', {
 				to: 'left',
-				value: textToBump.length,
+				value: textToSlide.length,
 			});
 		});
 	});
@@ -62,13 +62,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 
 		const startingLine = editor.document.lineAt(startingPosition.line);
-		const rangeToBump = new vscode.Range(startingPosition, startingLine.range.end);
-		const textToBump = editor.document.getText(rangeToBump);
-		const lineToBumpTo = editor.document.lineAt(startingPosition.line - 1);
+		const rangeToSlide = new vscode.Range(startingPosition, startingLine.range.end);
+		const textToSlide = editor.document.getText(rangeToSlide);
+		const lineToSlideTo = editor.document.lineAt(startingPosition.line - 1);
 
 		editor.edit((editBuilder) => {
-			editBuilder.delete(rangeToBump);
-			editBuilder.insert(lineToBumpTo.range.end, textToBump);
+			editBuilder.delete(rangeToSlide);
+			editBuilder.insert(lineToSlideTo.range.end, textToSlide);
 		}).then(() => {
 			vscode.commands.executeCommand('cursorMove', {
 				to: 'up',
@@ -78,7 +78,7 @@ export function activate(context: vscode.ExtensionContext) {
 			});
 			vscode.commands.executeCommand('cursorMove', {
 				to: 'left',
-				value: textToBump.length,
+				value: textToSlide.length,
 			});
 		});
 	});
