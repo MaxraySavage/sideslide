@@ -63,7 +63,25 @@ export function activate(context: vscode.ExtensionContext) {
 
 		editor.edit((editBuilder) => {
 			editBuilder.delete(rangeToSlide);
-			editBuilder.insert(lineToSlideTo.range.end, textToSlide);
+			// Adding the extra space at the end of the text prevents any rogue autocompletes
+			const textWithAddedSpace = textToSlide.concat(' ');
+			editBuilder.insert(lineToSlideTo.range.end, textWithAddedSpace);
+			}, 
+			{
+				undoStopBefore: true,
+				undoStopAfter: false
+			}
+		).then(() => {
+			editor.edit((editBuilder) => {
+				const lineWhereTextWasInserted = editor.document.lineAt(startingPosition.line - 1);
+				const positionWhereExtraSpaceWasInserted = lineWhereTextWasInserted.range.end.translate({characterDelta: -1});
+				const rangeContainingAddedSpace = new vscode.Range(positionWhereExtraSpaceWasInserted, lineWhereTextWasInserted.range.end);
+				editBuilder.delete(rangeContainingAddedSpace);
+			}, 
+			{
+				undoStopBefore: false,
+				undoStopAfter: true
+			});
 		}).then(() => {
 			vscode.commands.executeCommand('cursorMove', {
 				to: 'up',
