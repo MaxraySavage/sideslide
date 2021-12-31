@@ -20,31 +20,30 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const startingPosition = editor.selection.start;
 
+		// check to see if we are starting on the last line
+		// if so, there is no line to slide text down to so we return
+		if(startingPosition.line + 1 === editor.document.lineCount) {
+			return;
+		}
+
 		const startingLine = editor.document.lineAt(startingPosition.line);
 		const rangeToBump = new vscode.Range(startingPosition, startingLine.range.end);
 		const textToBump = editor.document.getText(rangeToBump);
-
+		const lineToBumpTo = editor.document.lineAt(startingPosition.line + 1);
 		
 		editor.edit((editBuilder) => {
-			// check to see if we are starting on the last line, if so make a newline below
-			if(startingPosition.line + 1 === editor.document.lineCount) {
-				editBuilder.insert(new vscode.Position(startingPosition.line, startingLine.text.length), EOL);
-			}
-		}).then( () => {
-			editor.edit((editBuilder) => {
-				const lineToBumpTo = editor.document.lineAt(startingPosition.line + 1);
-				vscode.commands.executeCommand('cursorMove', {
-					to: 'down',
-				});
-				editBuilder.insert(lineToBumpTo.range.end, textToBump);
-				vscode.commands.executeCommand('cursorMove', {
-					to: 'wrappedLineLastNonWhitespaceCharacter',
-				});
-				vscode.commands.executeCommand('cursorMove', {
-					to: 'left',
-					value: textToBump.length,
-				});
-				editBuilder.delete(rangeToBump);
+			editBuilder.delete(rangeToBump);
+			editBuilder.insert(lineToBumpTo.range.end, textToBump);
+		}).then(()=> {
+			vscode.commands.executeCommand('cursorMove', {
+				to: 'down',
+			});
+			vscode.commands.executeCommand('cursorMove', {
+				to: 'wrappedLineEnd',
+			});
+			vscode.commands.executeCommand('cursorMove', {
+				to: 'left',
+				value: textToBump.length,
 			});
 		});
 	});
@@ -55,34 +54,34 @@ export function activate(context: vscode.ExtensionContext) {
 
 		let startingPosition = editor.selection.start;
 
+		// If the starting position is the first line
+		// there is no line for us to slide text up to so we return
+		if(startingPosition.line === 0) {
+			return;
+		}
+
+
+		const startingLine = editor.document.lineAt(startingPosition.line);
+		const rangeToBump = new vscode.Range(startingPosition, startingLine.range.end);
+		const textToBump = editor.document.getText(rangeToBump);
+		const lineToBumpTo = editor.document.lineAt(startingPosition.line - 1);
+
 		editor.edit((editBuilder) => {
-			if(startingPosition.line === 0) {
-				// Vscode's default behavior makes sliding up on the first time not work well
-				// Specifically it autocompletes an html tag automatically 
-				// once it hits the first line
-				return;
-			}
-			startingPosition = editor.selection.start;
-			const startingLine = editor.document.lineAt(startingPosition.line);
-			const rangeToBump = new vscode.Range(startingPosition, startingLine.range.end);
-			const textToBump = editor.document.getText(rangeToBump);
-			const destinationLineNumber = Math.max(startingPosition.line - 1, 0);
-			const lineToBumpTo = editor.document.lineAt(destinationLineNumber);
+			editBuilder.delete(rangeToBump);
+			editBuilder.insert(lineToBumpTo.range.end, textToBump);
+		}).then(() => {
 			vscode.commands.executeCommand('cursorMove', {
 				to: 'up',
 			});
-			editBuilder.insert(lineToBumpTo.range.end, textToBump);
 			vscode.commands.executeCommand('cursorMove', {
-				to: 'wrappedLineLastNonWhitespaceCharacter',
+				to: 'wrappedLineEnd',
 			});
 			vscode.commands.executeCommand('cursorMove', {
 				to: 'left',
 				value: textToBump.length,
 			});
-			editBuilder.delete(rangeToBump);
 		});
 	});
-
 	context.subscriptions.push(slideDown);
 	context.subscriptions.push(slideUp);
 }
