@@ -26,21 +26,23 @@ export function activate(context: vscode.ExtensionContext) {
 		const textToSlide = editor.document.getText(rangeToSlide);
 		const lineToSlideTo = editor.document.lineAt(startingPosition.line + 1);
 		
-		editor.edit((editBuilder) => {
+		return editor.edit((editBuilder) => {
 			editBuilder.delete(rangeToSlide);
 			editBuilder.insert(lineToSlideTo.range.end, textToSlide);
-		}).then(()=> {
+		}).then(()=> (
 			vscode.commands.executeCommand('cursorMove', {
 				to: 'down',
-			});
-			vscode.commands.executeCommand('cursorMove', {
-				to: 'wrappedLineEnd',
-			});
-			vscode.commands.executeCommand('cursorMove', {
-				to: 'left',
-				value: textToSlide.length,
-			});
-		});
+			}).then(() => (
+				vscode.commands.executeCommand('cursorMove', {
+					to: 'wrappedLineEnd',
+				})
+			)).then(() => (
+				vscode.commands.executeCommand('cursorMove', {
+					to: 'left',
+					value: textToSlide.length,
+				})
+			))
+		));
 	});
 
 	let slideUp = vscode.commands.registerCommand('sideslide.slideUp', () => {
@@ -61,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
 		const textToSlide = editor.document.getText(rangeToSlide);
 		const lineToSlideTo = editor.document.lineAt(startingPosition.line - 1);
 
-		editor.edit((editBuilder) => {
+		return editor.edit((editBuilder) => {
 			editBuilder.delete(rangeToSlide);
 			// Adding the extra space at the end of the text prevents any rogue autocompletes
 			const textWithAddedSpace = textToSlide.concat(' ');
@@ -71,8 +73,8 @@ export function activate(context: vscode.ExtensionContext) {
 				undoStopBefore: true,
 				undoStopAfter: false
 			}
-		).then(() => {
-			editor.edit((editBuilder) => {
+		).then( () => {
+			return editor.edit((editBuilder) => {
 				const lineWhereTextWasInserted = editor.document.lineAt(startingPosition.line - 1);
 				const positionWhereExtraSpaceWasInserted = lineWhereTextWasInserted.range.end.translate({characterDelta: -1});
 				const rangeContainingAddedSpace = new vscode.Range(positionWhereExtraSpaceWasInserted, lineWhereTextWasInserted.range.end);
@@ -82,18 +84,20 @@ export function activate(context: vscode.ExtensionContext) {
 				undoStopBefore: false,
 				undoStopAfter: true
 			});
-		}).then(() => {
+		}).then(() => (
 			vscode.commands.executeCommand('cursorMove', {
 				to: 'up',
-			});
-			vscode.commands.executeCommand('cursorMove', {
-				to: 'wrappedLineEnd',
-			});
-			vscode.commands.executeCommand('cursorMove', {
-				to: 'left',
-				value: textToSlide.length,
-			});
-		});
+			}).then(() => (
+				vscode.commands.executeCommand('cursorMove', {
+					to: 'wrappedLineEnd',
+				})
+			)).then(() => (
+				vscode.commands.executeCommand('cursorMove', {
+					to: 'left',
+					value: textToSlide.length,
+				})
+			))
+		));
 	});
 	context.subscriptions.push(slideDown);
 	context.subscriptions.push(slideUp);
