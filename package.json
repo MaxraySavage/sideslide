@@ -2,7 +2,7 @@
 	"name": "sideslide",
 	"displayName": "SideSlide",
 	"description": "slide text up or down the side of your document!",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "smaxray",
 	"icon": "images/icon.png",
 	"repository": "https://github.com/MaxraySavage/sideslide",
