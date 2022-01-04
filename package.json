@@ -2,9 +2,9 @@
 	"name": "sideslide",
 	"displayName": "SideSlide",
 	"description": "slide text up or down the side of your document!",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "smaxray",
-	"repository":"https://github.com/MaxraySavage/sideslide",
+	"repository": "https://github.com/MaxraySavage/sideslide",
 	"engines": {
 		"vscode": "^1.61.0"
 	},
